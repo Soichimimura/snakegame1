@@ -1,6 +1,12 @@
 const WIDTH = 20;
 const HEIGHT = 20;
 
+const SPEEDS = {
+    1: 200,   // Easy
+    2: 120,   // Normal
+    3: 60     // Hard
+};
+
 class Snake{
 
 
@@ -151,14 +157,14 @@ class Field{
 
 class Game {
     constructor() {
-      this.snake = new Snake();
-      this.food = new Food(this.snake.body);
+
       this.field = new Field();
       this.score = 0;
+      this.level = 1;
       this.gameLoop = null;
         
        window.addEventListener('keydown', (event) => {
-          
+          if (!this.snake) return; 
 
           if (['ArrowLeft', 'ArrowUp', 'ArrowRight', 'ArrowDown'].includes(event.key)) {
            event.preventDefault();
@@ -170,12 +176,34 @@ class Game {
              case 'ArrowDown':  this.snake.setDir('down');  break;
             }
         });
+
+        document.querySelectorAll('.level-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const level = parseInt(btn.dataset.level);   // "1" → 1
+            this.startGame(level);
+          });
+        });
+
+        document.getElementById('restart-btn').addEventListener('click', () => {
+          this.startGame(this.level); 
+       });   
+       
+        document.getElementById('quit-btn').addEventListener('click', () => {
+        this.showScreen('start');     // スタート画面に戻る
+       });      
     }
     
-    start() {
-       this.updateScreen();  
-       this.gameLoop = setInterval(() => this.tick(), 200);
-    }
+    startGame(level) {
+      this.level = level;
+      this.snake = new Snake();
+      this.food = new Food(this.snake.body);
+      this.score = 0;
+    
+      this.showScreen('game');
+      this.updateScreen();
+    
+      this.gameLoop = setInterval(() => this.tick(), SPEEDS[level]);
+} 
     
     tick() {
       const result = this.snake.move(this.food);
@@ -191,16 +219,27 @@ class Game {
     }
     
     end() {
-       clearInterval(this.gameLoop);
-       alert('Game Over! Score: ' + this.score);
-    }
+      clearInterval(this.gameLoop);
+      document.getElementById('final-score').textContent = this.score;
+      this.showScreen('gameover');
+     }
     
     updateScreen() {
        document.getElementById('board').textContent = this.field.Draw(this.snake, this.food);
        document.getElementById('score').textContent = this.score;
     }
+
+    restart() {
+    
+    this.snake = new Snake();
+    this.food = new Food(this.snake.body);
+    this.score = 0;
+
+    document.getElementById('gameover').style.display = 'none';
+
+    this.start();
+}
 }
 
 const game = new Game();
-game.start();
 

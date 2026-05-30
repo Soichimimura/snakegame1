@@ -1,13 +1,35 @@
 <!DOCTYPE html>
 <html>
+<body>
 
- <body>
-    <p>Score: <span id="score">0</span></p> 
-    <pre id="board"></pre>
+
+    <div id="start-screen">
+     <h1>SNAKE</h1>
+     <p>SELECT LEVEL</p>
+     <button class="level-btn" data-level="1">EASY</button>
+     <button class="level-btn" data-level="2">NORMAL</button>
+     <button class="level-btn" data-level="3">HARD</button>
+    </div>
+
+
+    <div id="game-screen" style="display: none;">
+     <p>Score: <span id="score">0</span></p>
+     <pre id="board"></pre>
+    </div>
+
+    <div id="gameover-screen" style="display: none;">
+     <p>Game Over!</p>
+     <p>Final Score: <span id="final-score">0</span></p>
+     <button id="restart-btn">RESTART</button>
+     <button id="quit-btn">QUIT</button>
+    </div>
+
+
     <script src="../js/snakegame.js"></script>
 
 
- 
+</body>
+</html>
 
 
 
@@ -18,6 +40,5 @@
 
 
 
- </body>
-
+</body>
 </html>
