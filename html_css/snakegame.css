@@ -486,10 +486,13 @@ body::before {
   z-index: 1;
 }
 
-/* ===========================
-   Responsive
-   =========================== */
-
+.touch-hint {
+  margin-top: 0.8rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  opacity: 0.6;
+  font-weight: 700;
+}
 @media (max-width: 600px) {
   body::before { inset: 200px 0 0 0; }
 

@@ -242,6 +242,41 @@ class Game {
             }
         });
 
+        this.canvas.addEventListener('touchstart', (event) => {
+          event.preventDefault();
+          const touch = event.touches[0];
+          touchStartX = touch.clientX;
+          touchStartY = touch.clientY;
+        });
+
+        this.canvas.addEventListener('touchend', (event) => {
+          event.preventDefault();
+          if (!this.snake) return;
+    
+          const touch = event.changedTouches[0];
+          const dx = touch.clientX - touchStartX;
+          const dy = touch.clientY - touchStartY;
+    
+   
+         if (Math.abs(dx) < 20 && Math.abs(dy) < 20) return;
+    
+         if (Math.abs(dx) > Math.abs(dy)) {
+        
+            if (dx > 0) {
+            this.snake.setDir('right');
+           } else {
+            this.snake.setDir('left');
+           }
+        } else {
+        
+        if (dy > 0) {
+            this.snake.setDir('down');
+         } else {
+            this.snake.setDir('up');
+         }
+        }
+       });
+
         document.querySelectorAll('.level-btn').forEach(btn => {
           btn.addEventListener('click', () => {
             const level = parseInt(btn.dataset.level);   // "1" → 1
@@ -254,7 +289,7 @@ class Game {
        });   
        
         document.getElementById('quit-btn').addEventListener('click', () => {
-        this.showScreen('start');     // スタート画面に戻る
+        this.showScreen('start');   
        });      
     }
 
