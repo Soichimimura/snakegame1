@@ -369,6 +369,7 @@ class Game {
     updateScreen() {
        this.field.Draw(this.ctx, this.snake, this.food);
        document.getElementById('score').textContent = this.score;
+       document.getElementById('level').textContent = this.level;
     }
 
 }
