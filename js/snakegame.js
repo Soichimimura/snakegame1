@@ -347,7 +347,7 @@ class Game {
          text.style.animation = 'pulseCountdown 1s ease';
     
          i++;
-         setTimeout(showNext, 1000); 
+         setTimeout(showNext, 700); 
         };
   
         showNext();
