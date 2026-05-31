@@ -259,6 +259,8 @@ class Game {
        if (hasMoved) return;
        if (document.getElementById('game-screen').classList.contains('hidden')) return;
 
+       event.preventDefault(); 
+
        const touch = event.touches[0];
        const dx = touch.clientX - touchStartX;
        const dy = touch.clientY - touchStartY;
@@ -273,7 +275,6 @@ class Game {
            else this.snake.setDir('up');
        }
       hasMoved = true;
-      event.preventDefault();
     },{ passive: false });
 
 
