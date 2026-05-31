@@ -262,7 +262,7 @@ class Game {
        const dx = touch.clientX - touchStartX;
        const dy = touch.clientY - touchStartY;
 
-       if (Math.abs(dx) < 15 && Math.abs(dy) < 15) return;
+       if (Math.abs(dx) < 5 && Math.abs(dy) < 5) return;
 
        if (Math.abs(dx) > Math.abs(dy)) {
            if (dx > 0) this.snake.setDir('right');
