@@ -1,44 +1,103 @@
 <!DOCTYPE html>
 <html>
+ <head>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <title>Snake Game</title>
+   <link rel="stylesheet" href="https://unpkg.com/ress@5.0.2/dist/ress.min.css">
+   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap">
+   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
+   <link href="snakegame.css" rel="stylesheet">
+ </head>
 <body>
 
 
-    <div id="start-screen">
-     <h1>SNAKE</h1>
-     <p>SELECT LEVEL</p>
-     <button class="level-btn" data-level="1">EASY</button>
-     <button class="level-btn" data-level="2">NORMAL</button>
-     <button class="level-btn" data-level="3">HARD</button>
+
+   <main class="snake-main">
+
+    <div id="start-screen" class="screen">
+     <div class="title-block">
+       <p class="subtitle-top">— PROJECT 01 —</p>
+       <h1 class="game-title">SNAKE</h1>
+       <p class="origin">Originally written in <span class="lang-tag">C</span> · Ported to <span class="lang-tag">JavaScript</span></p>
+      </div>
+
+      <div class="level-section">
+       <p class="instruction">SELECT DIFFICULTY</p>
+        <div class="level-buttons">
+         <button class="level-btn" data-level="1">
+          <span class="level-num">01</span>
+          <span class="level-name">EASY</span>
+          <span class="level-desc">slow & steady</span>
+         </button>
+         <button class="level-btn" data-level="2">
+          <span class="level-num">02</span>
+          <span class="level-name">NORMAL</span>
+          <span class="level-desc">standard pace</span>
+          </button>
+          <button class="level-btn" data-level="3">
+            <span class="level-num">03</span>
+            <span class="level-name">HARD</span>
+            <span class="level-desc">blink & you die</span>
+         </button>
+        </div>
+         <a href="works.html" class="back-link">← BACK TO WORKS</a>
+       </div>
+    </div> 
+
+
+
+   <div id="game-screen" class="screen hidden">
+     <div class="game-info">
+       <div class="info-block">
+         <span class="info-label">SCORE</span>
+         <span id="score" class="info-value">0</span>
+       </div>
+       <div class="info-block center">
+         <span class="info-label">LEVEL</span>
+         <span id="level" class="info-value">1</span>
+        </div>
+      </div>
+
+     <div class="canvas-wrap">
+       <canvas id="game-canvas" width="400" height="400"></canvas>
+       <div id="countdown-overlay" class="countdown-overlay hidden">
+         <div id="countdown-text">3</div>
+       </div>
+     </div>
+
+     <div class="controls">
+       <p class="controls-label">CONTROLS</p>
+       <div class="key-hints">
+         <span class="key">↑</span>
+         <span class="key">↓</span>
+         <span class="key">←</span>
+         <span class="key">→</span>
+       </div>
+      </div>
     </div>
 
+    <div id="gameover-screen" class="screen hidden">
+     <div class="result-block">
+      <p class="result-eyebrow">— RESULT —</p>
+      <h2 id="result-title" class="result-title">GAME OVER</h2>
+     </div>
 
-    <div id="game-screen" style="display: none;">
-     <p>Score: <span id="score">0</span></p>
-     <pre id="board"></pre>
+     <div class="result-stats">
+        <div class="stat">
+         <span class="stat-label">YOUR SCORE</span>
+         <span id="final-score" class="stat-value">0</span>
+        </div>
+     </div>
+
+     <div class="result-buttons">
+      <button id="restart-btn" class="btn primary"><span>RESTART</span></button>
+      <button id="quit-btn" class="btn secondary"><span>QUIT</span></button>
+     </div>
     </div>
 
-    <div id="gameover-screen" style="display: none;">
-     <p>Game Over!</p>
-     <p>Final Score: <span id="final-score">0</span></p>
-     <button id="restart-btn">RESTART</button>
-     <button id="quit-btn">QUIT</button>
-    </div>
-
+    </main>
 
     <script src="../js/snakegame.js"></script>
-
-
-</body>
-</html>
-
-
-
-
-
-
-
-
-
-
-</body>
+ </body>
 </html>

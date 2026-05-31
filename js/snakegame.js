@@ -1,5 +1,6 @@
 const WIDTH = 20;
 const HEIGHT = 20;
+const CELL_SIZE = 20; 
 
 const SPEEDS = {
     1: 200,   // Easy
@@ -127,31 +128,90 @@ class Field{
      return x===0 || x ===WIDTH-1 ||y===0 || y===HEIGHT -1;
    }
 
-   Draw(snake,food){
-    let result = '';
-    for (let y = 0; y < HEIGHT; y++) {
-    for (let x = 0; x < WIDTH; x++) {
-       if (this.isWall(x, y)) {
-          result += '+';
-        } 
-       else if (x === food.x && y === food.y) {
-          result += '$';
-        } 
-       else {
-         let isSnake = false;
-         for (let i = 0; i < snake.body.length; i++) {
-          if (snake.body[i].x === x && snake.body[i].y === y) {
-              isSnake = true;
-              break;
-            }
-          }
-         result += isSnake ? '0' : ' ';
-        }
+   Draw(ctx,snake,food){
+    
+    ctx.fillStyle = '#1E006D';
+    ctx.fillRect(0,0,WIDTH*CELL_SIZE,HEIGHT*CELL_SIZE);
+
+
+    ctx.fillStyle = '#fff200';
+    for (let y=0;y<HEIGHT;y++){
+     for (let x=0;x<WIDTH;x++){
+       if(this.isWall(x,y)){
+          ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+       }     
       }
-      result += '\n';
+     }
+
+     const cx = food.x * CELL_SIZE + CELL_SIZE / 2;
+     const cy = food.y * CELL_SIZE + CELL_SIZE / 2;
+     const r = CELL_SIZE / 2 - 3;
+
+     ctx.shadowColor = '#ffffff';
+     ctx.shadowBlur = 15;
+     ctx.fillStyle = '#ffffff';
+     ctx.beginPath();
+     ctx.arc(cx, cy, r, 0, Math.PI * 2);
+     ctx.fill();
+     ctx.shadowBlur = 0;
+        
+     ctx.fillStyle = '#fff200';
+     ctx.beginPath();
+     ctx.arc(cx, cy, r - 3, 0, Math.PI * 2);
+     ctx.fill();
+        
+     for (let i = 0; i < snake.body.length; i++) {
+      const isHead = (i === 0);
+      this.drawSnakeSegment(ctx, snake.body[i].x, snake.body[i].y, isHead, snake.currentdir);
+        }   
     }
-    return result;
-  }
+
+    drawSnakeSegment(ctx, x, y, isHead, direction) {
+       const px = x * CELL_SIZE;
+       const py = y * CELL_SIZE;
+        
+       if (isHead) {
+            ctx.shadowColor = '#fff200';
+            ctx.shadowBlur = 12;
+        }
+        
+       ctx.fillStyle = '#fff200';
+       const padding = isHead ? 1 : 2;
+       ctx.fillRect(px + padding, py + padding, CELL_SIZE - padding * 2, CELL_SIZE - padding * 2);
+        
+       ctx.shadowBlur = 0;
+        
+       if (!isHead) {
+           ctx.fillStyle = 'rgba(30, 0, 109, 0.3)';
+           ctx.fillRect(px + 6, py + 6, CELL_SIZE - 12, CELL_SIZE - 12);
+        }
+        
+       if (isHead) {
+           this.drawEyes(ctx, px, py, direction);
+        }
+    }
+    
+    drawEyes(ctx, px, py, direction) {
+       ctx.fillStyle = '#1E006D';
+       const eyeSize = 3;     
+       let eye1x, eye1y, eye2x, eye2y;
+        
+       if (direction === 'right') {
+         eye1x = px + 13; eye1y = py + 5;
+         eye2x = px + 13; eye2y = py + 12;
+       } else if (direction === 'left') {
+         eye1x = px + 4;  eye1y = py + 5;
+         eye2x = px + 4;  eye2y = py + 12;
+       } else if (direction === 'down') {
+         eye1x = px + 5;  eye1y = py + 13;
+         eye2x = px + 12; eye2y = py + 13;
+       } else {  // up
+         eye1x = px + 5;  eye1y = py + 4;
+         eye2x = px + 12; eye2y = py + 4;
+        } 
+       ctx.fillRect(eye1x, eye1y, eyeSize, eyeSize);
+       ctx.fillRect(eye2x, eye2y, eyeSize, eyeSize);
+    }
 }
 
 
@@ -159,9 +219,14 @@ class Game {
     constructor() {
 
       this.field = new Field();
+      this.snake = null;
+      this.food =  null;
       this.score = 0;
       this.level = 1;
       this.gameLoop = null;
+
+      this.canvas = document.getElementById('game-canvas');
+      this.ctx = this.canvas.getContext('2d');
         
        window.addEventListener('keydown', (event) => {
           if (!this.snake) return; 
@@ -192,6 +257,14 @@ class Game {
         this.showScreen('start');     // スタート画面に戻る
        });      
     }
+
+    showScreen(name) {
+     document.getElementById('start-screen').classList.add('hidden');
+     document.getElementById('game-screen').classList.add('hidden');
+     document.getElementById('gameover-screen').classList.add('hidden');
+    
+     document.getElementById(name + '-screen').classList.remove('hidden');
+    }
     
     startGame(level) {
       this.level = level;
@@ -202,8 +275,42 @@ class Game {
       this.showScreen('game');
       this.updateScreen();
     
-      this.gameLoop = setInterval(() => this.tick(), SPEEDS[level]);
+      this.runCountdown(() => {
+        this.gameLoop = setInterval(() => this.tick(), SPEEDS[level]);
+  });
 } 
+
+      runCountdown(callback) {
+        const overlay = document.getElementById('countdown-overlay');
+        const text = document.getElementById('countdown-text');
+  
+  
+         overlay.classList.remove('hidden');
+  
+         const sequence = ['3', '2', '1', 'GO'];
+         let i = 0;
+  
+         const showNext = () => {
+          if (i >= sequence.length) {
+            overlay.classList.add('hidden');
+            callback();
+            return;
+        }
+    
+    
+          text.textContent = sequence[i];
+    
+    
+         text.style.animation = 'none';
+         text.offsetHeight; 
+         text.style.animation = 'pulseCountdown 1s ease';
+    
+         i++;
+         setTimeout(showNext, 1000); 
+        };
+  
+        showNext();
+    }
     
     tick() {
       const result = this.snake.move(this.food);
@@ -225,21 +332,12 @@ class Game {
      }
     
     updateScreen() {
-       document.getElementById('board').textContent = this.field.Draw(this.snake, this.food);
+       this.field.Draw(this.ctx, this.snake, this.food);
        document.getElementById('score').textContent = this.score;
     }
 
-    restart() {
-    
-    this.snake = new Snake();
-    this.food = new Food(this.snake.body);
-    this.score = 0;
-
-    document.getElementById('gameover').style.display = 'none';
-
-    this.start();
-}
 }
 
 const game = new Game();
+
 
