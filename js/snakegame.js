@@ -244,6 +244,7 @@ class Game {
 
       let touchStartX = 0;
       let touchStartY = 0;
+      let hasMoved = false; 
 
       window.addEventListener('touchstart', (event) => {
         if (document.getElementById('game-screen').classList.contains('hidden')) return;
