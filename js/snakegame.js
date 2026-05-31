@@ -248,6 +248,7 @@ class Game {
 
       window.addEventListener('touchstart', (event) => {
         if (document.getElementById('game-screen').classList.contains('hidden')) return;
+        event.preventDefault(); 
         const touch = event.touches[0];
         touchStartX = touch.clientX;
         touchStartY = touch.clientY;
@@ -259,7 +260,7 @@ class Game {
        if (hasMoved) return;
        if (document.getElementById('game-screen').classList.contains('hidden')) return;
 
-       event.preventDefault(); 
+       event.preventDefault();
 
        const touch = event.touches[0];
        const dx = touch.clientX - touchStartX;
@@ -291,7 +292,8 @@ class Game {
        });   
        
         document.getElementById('quit-btn').addEventListener('click', () => {
-        this.showScreen('start');   
+         document.body.classList.remove('no-scroll'); 
+         this.showScreen('start');   
        });      
     }
 
@@ -308,6 +310,8 @@ class Game {
       this.snake = new Snake();
       this.food = new Food(this.snake.body);
       this.score = 0;
+
+      document.body.classList.add('no-scroll'); 
     
       this.showScreen('game');
       this.updateScreen();
@@ -364,6 +368,7 @@ class Game {
     
     end() {
       clearInterval(this.gameLoop);
+      document.body.classList.remove('no-scroll');
       document.getElementById('final-score').textContent = this.score;
       this.showScreen('gameover');
      }
