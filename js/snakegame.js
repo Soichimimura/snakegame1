@@ -242,43 +242,40 @@ class Game {
             }
         });
 
-        let touchStartX = 0;
-        let touchStartY = 0;
+      let touchStartX = 0;
+      let touchStartY = 0;
 
-        this.canvas.addEventListener('touchstart', (event) => {
-          event.preventDefault();
-          const touch = event.touches[0];
-          touchStartX = touch.clientX;
-          touchStartY = touch.clientY;
-        });
+      window.addEventListener('touchstart', (event) => {
+        if (document.getElementById('game-screen').classList.contains('hidden')) return;
+        const touch = event.touches[0];
+        touchStartX = touch.clientX;
+        touchStartY = touch.clientY;
+        hasMoved = false;
+      });
 
-        this.canvas.addEventListener('touchend', (event) => {
-          event.preventDefault();
-          if (!this.snake) return;
-    
-          const touch = event.changedTouches[0];
-          const dx = touch.clientX - touchStartX;
-          const dy = touch.clientY - touchStartY;
-    
-   
-         if (Math.abs(dx) <5 && Math.abs(dy) < 5) return;
-    
-         if (Math.abs(dx) > Math.abs(dy)) {
-        
-            if (dx > 0) {
-            this.snake.setDir('right');
-           } else {
-            this.snake.setDir('left');
-           }
-        } else {
-        
-        if (dy > 0) {
-            this.snake.setDir('down');
-         } else {
-            this.snake.setDir('up');
-         }
-        }
-       });
+      window.addEventListener('touchmove', (event) => {
+       if (!this.snake) return;
+       if (hasMoved) return;
+       if (document.getElementById('game-screen').classList.contains('hidden')) return;
+
+       const touch = event.touches[0];
+       const dx = touch.clientX - touchStartX;
+       const dy = touch.clientY - touchStartY;
+
+       if (Math.abs(dx) < 15 && Math.abs(dy) < 15) return;
+
+       if (Math.abs(dx) > Math.abs(dy)) {
+           if (dx > 0) this.snake.setDir('right');
+           else this.snake.setDir('left');
+       } else {
+           if (dy > 0) this.snake.setDir('down');
+           else this.snake.setDir('up');
+       }
+      hasMoved = true;
+      event.preventDefault();
+    },{ passive: false });
+
+
 
         document.querySelectorAll('.level-btn').forEach(btn => {
           btn.addEventListener('click', () => {
