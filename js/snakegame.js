@@ -261,7 +261,7 @@ class Game {
           const dy = touch.clientY - touchStartY;
     
    
-         if (Math.abs(dx) < 20 && Math.abs(dy) < 20) return;
+         if (Math.abs(dx) <5 && Math.abs(dy) < 5) return;
     
          if (Math.abs(dx) > Math.abs(dy)) {
         
