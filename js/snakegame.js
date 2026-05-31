@@ -242,6 +242,9 @@ class Game {
             }
         });
 
+        let touchStartX = 0;
+        let touchStartY = 0;
+
         this.canvas.addEventListener('touchstart', (event) => {
           event.preventDefault();
           const touch = event.touches[0];
@@ -312,8 +315,8 @@ class Game {
     
       this.runCountdown(() => {
         this.gameLoop = setInterval(() => this.tick(), SPEEDS[level]);
-  });
-} 
+     });
+    } 
 
       runCountdown(callback) {
         const overlay = document.getElementById('countdown-overlay');
